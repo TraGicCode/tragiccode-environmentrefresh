@@ -1,11 +1,14 @@
 require 'puppetlabs_spec_helper/rake_tasks'
 require 'puppet-lint/tasks/puppet-lint'
 require 'metadata-json-lint/rake_task'
+require 'puppet-strings/tasks'
+require "guard/rake_task"
+require 'github_changelog_generator/task'
+require 'puppet_blacksmith/rake_tasks'
 
-if RUBY_VERSION >= '1.9'
-  require 'rubocop/rake_task'
-  RuboCop::RakeTask.new
-end
+
+
+Guard::RakeTask.new(:guard)
 
 PuppetLint.configuration.send('disable_80chars')
 PuppetLint.configuration.relative = true
@@ -24,9 +27,17 @@ task :validate do
   end
 end
 
-desc 'Run lint, validate, and spec tests.'
+desc 'Run metadata_lint, lint, validate, and spec tests.'
 task :test do
-  [:lint, :validate, :spec].each do |test|
+  [:metadata_lint, :lint, :validate, :spec].each do |test|
     Rake::Task[test].invoke
   end
+end
+
+GitHubChangelogGenerator::RakeTask.new :changelog do |config|
+  metadata_json = File.join(File.dirname(__FILE__), 'metadata.json')
+  metadata = JSON.load(File.read(metadata_json))
+  config.future_release = "v#{metadata['version']}" if metadata['version'] =~ /^\d+\.\d+.\d+$/
+  config.header = "# Changelog\n\nAll notable changes to this project will be documented in this file.\nThis project follows semver to help clients understand the impact of updates/changes.  Find out more at http://semver.org."
+  config.project = metadata['name']
 end
