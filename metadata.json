@@ -1,12 +1,12 @@
 {
-  "name": "tragiccode-environmentrefresh",
+  "name": "tragiccode-refreshenvironment",
   "version": "0.1.0",
   "author": "tragiccode",
-  "summary": "The environmentrefresh module is used to refresh the puppet daemons system environment variables.",
+  "summary": "The refreshenvironment module is used to refresh the puppet daemons system environment variables.",
   "license": "Apache-2.0",
-  "source": "https://github.com/TraGicCode/tragiccode-environmentrefresh",
-  "project_page": "https://github.com/TraGicCode/tragiccode-environmentrefresh",
-  "issues_url": "https://github.com/TraGicCode/tragiccode-environmentrefresh/issues",
+  "source": "https://github.com/TraGicCode/tragiccode-refreshenvironment",
+  "project_page": "https://github.com/TraGicCode/tragiccode-refreshenvironment",
+  "issues_url": "https://github.com/TraGicCode/tragiccode-refreshenvironment/issues",
   "dependencies": [
     {
       "name": "puppetlabs-stdlib",
