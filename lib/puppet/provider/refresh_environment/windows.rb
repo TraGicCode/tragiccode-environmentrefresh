@@ -16,7 +16,7 @@ Puppet::Type.type(:refresh_environment).provide(:windows) do
       # Ignore paths.  We will build these up seperately later.
       new_process_env_hash  = PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(current_process_preserved_env_hash, PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS)
       # Ignore USERNAME from machine environment variable.  It's not really useful.
-      new_process_env_hash.merge!(PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(machine_env_hash, 'USERNAME'))
+      new_process_env_hash.merge!(PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(machine_env_hash, ['USERNAME']))
 
       if PuppetX::Tragiccode::Security.is_local_system?(ENV['USERNAME'])
         user_env_hash = PuppetX::Tragiccode::SystemEnvironment.get_user_environment_variables()
