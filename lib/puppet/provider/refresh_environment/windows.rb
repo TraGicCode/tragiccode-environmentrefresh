@@ -11,6 +11,7 @@ Puppet::Type.type(:refresh_environment).provide(:windows) do
       new_process_env_hash = {}
       current_process_preserved_env_hash = ENV.to_hash
       machine_env_hash  = PuppetX::Tragiccode::SystemEnvironment.get_machine_environment_variables()
+      Puppet.debug("Machine Environment Varibales = #{machine_env_hash}")
       
       # Ignore paths.  We will build these up seperately later.
       new_process_env_hash  = PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(current_process_preserved_env_hash, PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS)
@@ -19,6 +20,7 @@ Puppet::Type.type(:refresh_environment).provide(:windows) do
 
       if PuppetX::Tragiccode::Security.is_local_system?(ENV['USERNAME'])
         user_env_hash = PuppetX::Tragiccode::SystemEnvironment.get_user_environment_variables()
+        Puppet.debug("User Environment Varibales = #{user_env_hash}")
         new_process_env_hash.merge!(PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(user_env_hash, PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS))
         # Tack on user paths to end of machine ones.
         PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS.each { |path_key| new_process_env_hash[path_key] += ";#{user_env_hash[path_key]}" }
