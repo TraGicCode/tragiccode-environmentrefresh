@@ -1,6 +1,5 @@
 
 require File.join(File.dirname(__FILE__), '../../../puppet_x/tragiccode/system_environment')
-require File.join(File.dirname(__FILE__), '../../../puppet_x/tragiccode/security')
 require File.join(File.dirname(__FILE__), '../../../puppet_x/tragiccode/hash_extensions')
 
 Puppet::Type.type(:refresh_environment).provide(:windows) do
@@ -18,13 +17,11 @@ Puppet::Type.type(:refresh_environment).provide(:windows) do
       # Ignore USERNAME from machine environment variable.  It's not really useful.
       new_process_env_hash.merge!(PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(machine_env_hash, ['USERNAME']))
 
-      if PuppetX::Tragiccode::Security.is_local_system?(ENV['USERNAME'])
-        user_env_hash = PuppetX::Tragiccode::SystemEnvironment.get_user_environment_variables()
-        Puppet.debug("User Environment Varibales = #{user_env_hash}")
-        new_process_env_hash.merge!(PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(user_env_hash, PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS))
-        # Tack on user paths to end of machine ones.
-        PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS.each { |path_key| new_process_env_hash[path_key] += ";#{user_env_hash[path_key]}" }
-      end
+      user_env_hash = PuppetX::Tragiccode::SystemEnvironment.get_user_environment_variables()
+      Puppet.debug("User Environment Varibales = #{user_env_hash}")
+      new_process_env_hash.merge!(PuppetX::Tragiccode::HashExtensions.remove_keys_from_hash(user_env_hash, PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS))
+      # Tack on user paths to end of machine ones.
+      PuppetX::Tragiccode::SystemEnvironment::PATH_ENV_KEYS.each { |path_key| new_process_env_hash[path_key] += ";#{user_env_hash[path_key]}" }
       
       # TODO: Handle path changes done from the current process.
       # TODO: 8.3 file paths are showing up as a diff
