@@ -36,7 +36,7 @@ Puppet::Type.type(:refresh_environment).provide(:windows) do
         Puppet.debug("Environment for the process is stale will be updated.")
         Puppet.debug("Previous Environment Varibales = #{current_process_preserved_env_hash}")
         Puppet.debug("New Environment Variables = #{new_process_env_hash}")
-        ENV.to_hash.merge(new_process_env_hash)
+        ENV.update(new_process_env_hash)
       else
         Puppet.debug("Environment for the process is already up-to-date.")
       end
